@@ -1,5 +1,6 @@
 package tech.jhipster.lite.module.domain.resource;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import tech.jhipster.lite.module.domain.JHipsterModuleFactory;
 import tech.jhipster.lite.module.domain.JHipsterModuleSlug;
 import tech.jhipster.lite.shared.error.domain.Assert;
@@ -63,6 +64,17 @@ public final class JHipsterModuleResource {
 
   public JHipsterModulePropertiesDefinition propertiesDefinition() {
     return propertiesDefinition;
+  }
+
+  @Override
+  public String toString() {
+    return new ToStringBuilder(this)
+      .append("slug", slug)
+      .append("apiDoc", apiDoc)
+      .append("tags", tags)
+      .append("organization", organization)
+      .append("propertiesDefinition", propertiesDefinition)
+      .build();
   }
 
   private static final class JHipsterModuleResourceBuilder

@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Stream;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import tech.jhipster.lite.shared.error.domain.Assert;
 
 public final class JHipsterModulePropertiesDefinition {
@@ -42,6 +43,11 @@ public final class JHipsterModulePropertiesDefinition {
 
   public Stream<JHipsterModulePropertyDefinition> stream() {
     return definitions.stream();
+  }
+
+  @Override
+  public String toString() {
+    return new ToStringBuilder(this).append("definitions", definitions).build();
   }
 
   public static final class JHipsterModulePropertiesDefinitionBuilder {
