@@ -9,6 +9,8 @@ public sealed interface JHipsterLandscapeElement permits JHipsterLandscapeFeatur
 
   Optional<JHipsterLandscapeDependencies> dependencies();
 
+  Optional<JHipsterLandscapeDependencies> exclusions();
+
   Stream<JHipsterLandscapeModule> allModules();
 
   Stream<JHipsterSlug> slugs();

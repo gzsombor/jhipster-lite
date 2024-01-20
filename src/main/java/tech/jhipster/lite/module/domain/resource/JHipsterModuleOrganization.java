@@ -5,9 +5,7 @@ import java.util.Collection;
 import java.util.Optional;
 import tech.jhipster.lite.generator.slug.domain.JHLiteModuleSlug;
 import tech.jhipster.lite.module.domain.JHipsterFeatureSlug;
-import tech.jhipster.lite.module.domain.landscape.JHipsterFeatureDependency;
 import tech.jhipster.lite.module.domain.landscape.JHipsterLandscapeDependency;
-import tech.jhipster.lite.module.domain.landscape.JHipsterModuleDependency;
 import tech.jhipster.lite.shared.error.domain.Assert;
 
 public final class JHipsterModuleOrganization {
@@ -17,10 +15,12 @@ public final class JHipsterModuleOrganization {
 
   private final Optional<JHipsterFeatureSlug> feature;
   private final Collection<JHipsterLandscapeDependency> dependencies;
+  private final Collection<JHipsterLandscapeDependency> exclusions;
 
   private JHipsterModuleOrganization(JHipsterModuleOrganizationBuilder builder) {
     feature = builder.feature;
     dependencies = builder.dependencies;
+    exclusions = builder.exclusions;
   }
 
   public static JHipsterModuleOrganizationBuilder builder() {
@@ -35,9 +35,14 @@ public final class JHipsterModuleOrganization {
     return dependencies;
   }
 
+  public Collection<JHipsterLandscapeDependency> exclusions() {
+    return exclusions;
+  }
+
   public static class JHipsterModuleOrganizationBuilder {
 
     private final Collection<JHipsterLandscapeDependency> dependencies = new ArrayList<>();
+    private final Collection<JHipsterLandscapeDependency> exclusions = new ArrayList<>();
     private Optional<JHipsterFeatureSlug> feature = Optional.empty();
 
     public JHipsterModuleOrganizationBuilder feature(JHipsterFeatureSlugFactory feature) {
@@ -51,7 +56,7 @@ public final class JHipsterModuleOrganization {
     public JHipsterModuleOrganizationBuilder addDependency(JHipsterModuleSlugFactory module) {
       Assert.notNull("module", module);
 
-      dependencies.add(new JHipsterModuleDependency(module.build()));
+      dependencies.add(module.toModuleDependency());
 
       return this;
     }
@@ -59,7 +64,23 @@ public final class JHipsterModuleOrganization {
     public JHipsterModuleOrganizationBuilder addDependency(JHipsterFeatureSlugFactory feature) {
       Assert.notNull("feature", feature);
 
-      feature.build().map(JHipsterFeatureDependency::new).ifPresent(dependencies::add);
+      feature.toFeatureDependency().ifPresent(dependencies::add);
+
+      return this;
+    }
+
+    public JHipsterModuleOrganizationBuilder addExclusion(JHipsterModuleSlugFactory module) {
+      Assert.notNull("module", module);
+
+      exclusions.add(module.toModuleDependency());
+
+      return this;
+    }
+
+    public JHipsterModuleOrganizationBuilder addExclusion(JHipsterFeatureSlugFactory feature) {
+      Assert.notNull("feature", feature);
+
+      feature.toFeatureDependency().ifPresent(exclusions::add);
 
       return this;
     }

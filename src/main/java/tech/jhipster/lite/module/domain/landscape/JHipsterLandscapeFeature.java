@@ -49,6 +49,12 @@ public final class JHipsterLandscapeFeature implements JHipsterLandscapeElement 
   }
 
   @Override
+  public Optional<JHipsterLandscapeDependencies> exclusions() {
+    // TODO: the exclusions are not implemented
+    return Optional.empty();
+  }
+
+  @Override
   public Stream<JHipsterLandscapeModule> allModules() {
     return modules.stream();
   }

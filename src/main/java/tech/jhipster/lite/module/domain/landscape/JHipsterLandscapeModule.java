@@ -19,6 +19,7 @@ public final class JHipsterLandscapeModule implements JHipsterLandscapeElement {
   private final JHipsterModuleOperation operation;
   private final JHipsterModulePropertiesDefinition propertiesDefinition;
   private final Optional<JHipsterLandscapeDependencies> dependencies;
+  private final Optional<JHipsterLandscapeDependencies> exclusions;
 
   private JHipsterLandscapeModule(JHipsterLandscapeModuleBuilder builder) {
     Assert.notNull("module", builder.module);
@@ -29,6 +30,7 @@ public final class JHipsterLandscapeModule implements JHipsterLandscapeElement {
     operation = builder.operation;
     propertiesDefinition = builder.propertiesDefinition;
     dependencies = JHipsterLandscapeDependencies.of(builder.dependencies);
+    exclusions = JHipsterLandscapeDependencies.of(builder.exclusions);
   }
 
   public static JHipsterLandscapeModuleSlugBuilder builder() {
@@ -51,6 +53,11 @@ public final class JHipsterLandscapeModule implements JHipsterLandscapeElement {
   @Override
   public Optional<JHipsterLandscapeDependencies> dependencies() {
     return dependencies;
+  }
+
+  @Override
+  public Optional<JHipsterLandscapeDependencies> exclusions() {
+    return exclusions;
   }
 
   @Override
@@ -105,6 +112,7 @@ public final class JHipsterLandscapeModule implements JHipsterLandscapeElement {
     private JHipsterModuleSlug module;
     private JHipsterModuleOperation operation;
     private Collection<? extends JHipsterLandscapeDependency> dependencies;
+    private Collection<? extends JHipsterLandscapeDependency> exclusions;
     private JHipsterModulePropertiesDefinition propertiesDefinition;
 
     @Override
@@ -129,8 +137,12 @@ public final class JHipsterLandscapeModule implements JHipsterLandscapeElement {
     }
 
     @Override
-    public JHipsterLandscapeModule dependencies(Collection<? extends JHipsterLandscapeDependency> dependencies) {
+    public JHipsterLandscapeModule dependenciesAndExclusions(
+      Collection<? extends JHipsterLandscapeDependency> dependencies,
+      Collection<? extends JHipsterLandscapeDependency> exclusions
+    ) {
       this.dependencies = dependencies;
+      this.exclusions = exclusions;
 
       return new JHipsterLandscapeModule(this);
     }
@@ -157,10 +169,17 @@ public final class JHipsterLandscapeModule implements JHipsterLandscapeElement {
   }
 
   public interface JHipsterLandscapeModuleDependenciesBuilder {
-    JHipsterLandscapeModule dependencies(Collection<? extends JHipsterLandscapeDependency> dependencies);
+    JHipsterLandscapeModule dependenciesAndExclusions(
+      Collection<? extends JHipsterLandscapeDependency> dependencies,
+      Collection<? extends JHipsterLandscapeDependency> exclusions
+    );
+
+    default JHipsterLandscapeModule dependencies(Collection<? extends JHipsterLandscapeDependency> dependencies) {
+      return dependenciesAndExclusions(dependencies, null);
+    }
 
     default JHipsterLandscapeModule withoutDependencies() {
-      return dependencies(null);
+      return dependenciesAndExclusions(null, null);
     }
   }
 }
